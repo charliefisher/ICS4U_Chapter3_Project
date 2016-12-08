@@ -1,4 +1,4 @@
-package Main;
+package main;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,9 +16,16 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements MouseMotionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
+	
+	tictactoe.MainMenu tttMainMenu = new tictactoe.MainMenu();
+	
+	battleship.MainMenu battleshipMainMenu = new battleship.MainMenu();
+	
+	
+	
 
 	public static enum GameState {
-		MAINMENU, BATTLESHIP, TICTACTOE
+		MAINMENU, BATTLESHIP, TICTACTOE, RESET
 	}
 
 	public static GameState state;
@@ -55,23 +62,26 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 
 	}
 
-	public void handleFonts(Graphics g) {
+	private void handleFonts(Graphics g) {
 		// set font color
 		g.setColor(Color.BLACK);
 
-		// set our default font to small
-		g.setFont(titleFont[0]);
-
-		// we are hovering over tic tac toe, enlarge the font
+		// select font size
 		if (hover[0]) {
 			g.setFont(titleFont[1]);
+		}
+		else {
+			g.setFont(titleFont[0]);
 		}
 
 		// draw the tic tac toe
 		g.drawString("TicTacToe", 300, 200);
 
-		// if we are not hovering over battleship, reset the font to small
-		if (!hover[1]) {
+		// select font size
+		if (hover[1]) {
+			g.setFont(titleFont[1]);
+		}
+		else {
 			g.setFont(titleFont[0]);
 		}
 
@@ -82,12 +92,15 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	public void run() {		
 		switch (state) {
 		case MAINMENU:
+			
 			break;
 		case BATTLESHIP:
-			
+			battleshipMainMenu.run();
 			break;
 		case TICTACTOE:
-			
+			tttMainMenu.run();
+			break;
+		case RESET: 
 			break;
 		}
 	}
@@ -98,7 +111,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
 			state = GameState.TICTACTOE;
 		} 
-		else if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 400 && e.getY() < 475)) {
+		else if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
 			state = GameState.BATTLESHIP;
 		}
 	}
@@ -118,7 +131,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 			hover[0] = false;
 		}
 			
-		if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 400 && e.getY() < 475)) {
+		if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
 			hover[1] = true;
 		} 
 		else {
