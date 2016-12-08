@@ -1,6 +1,8 @@
+package Main;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.FontFormatException;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -9,18 +11,11 @@ public class Main {
 	
 	static JFrame window = new JFrame("Charlie and Aaron's Video Game Arcade");
 	
-	private static short WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
+	private static short WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;	
 	
-	// 0 - Main Menu
-	// 10 - TicTacToe
-	// 20 - Battleship
-	// 3 - 
-	private static byte gameState = 0;
-	
-	
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, FontFormatException {
 		
-		MainMenu mm = new MainMenu();
+		GamePanel panel = new GamePanel();
 		
 //		BufferedImage jFrameIcon = new BufferedImage(null, null, false, null);
 		Cursor jFrameCursor = new Cursor(1);
@@ -33,25 +28,32 @@ public class Main {
 //		window.setIconImage(jFrameIcon);
 		window.setCursor(jFrameCursor);
 		
-		mm.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		window.setContentPane(mm);
+		panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		window.setContentPane(panel);
 		
-		mm.addMouseListener(mm);
-		mm.addMouseMotionListener(mm);
-		mm.requestFocus();
+		panel.addMouseListener(panel);
+		panel.addMouseMotionListener(panel);
+		panel.requestFocus();
 		
 		window.setVisible(true);
 		
-		mm.setBackground(Color.WHITE);
+		panel.setBackground(Color.WHITE);
 		
 		
 		
 		while (true) {
+			if (GamePanel.getGameState() == GamePanel.GameState.TICTACTOE) {
+				window.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
+				panel.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
+			}
+			
+			
 			long timeBeforeRun = System.currentTimeMillis();
 				
-			mm.run();
-			mm.repaint();
-		
+	
+			panel.run();
+			panel.repaint();
+			
 			long timeRunDifference = System.currentTimeMillis() - timeBeforeRun;
 			
 			
@@ -66,13 +68,5 @@ public class Main {
 	
 	public static short getHeight() {
 		return Main.WINDOW_HEIGHT;
-	}
-	
-	public static byte getGameState() {
-		return gameState;
-	}
-	
-	public static void setGameState(byte gs) {
-		Main.gameState = gs;
 	}
 }
