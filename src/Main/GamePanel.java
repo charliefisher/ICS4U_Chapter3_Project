@@ -13,19 +13,17 @@ import java.io.InputStream;
 
 import javax.swing.JPanel;
 
+import tictactoe.TicTacToePanel;
+
 public class GamePanel extends JPanel implements MouseMotionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	tictactoe.MainMenu tttMainMenu = new tictactoe.MainMenu();
+	TicTacToePanel ttt = new TicTacToePanel();
+//	battleship.MainMenu battleshipMainMenu = new battleship.MainMenu();
 	
-	battleship.MainMenu battleshipMainMenu = new battleship.MainMenu();
-	
-	
-	
-
 	public static enum GameState {
-		MAINMENU, BATTLESHIP, TICTACTOE, RESET
+		MAIN_MENU, BATTLESHIP, TICTACTOE, RESET
 	}
 
 	public static GameState state;
@@ -37,7 +35,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		// MAKE IT A SINGLETON
 
 		// we are in the main menu
-		state = GameState.MAINMENU;
+		state = GameState.MAIN_MENU;
 
 		// URL fileURL =
 		// getClass().getResource("General_Resources/MainMenu.png");
@@ -55,11 +53,23 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	}
 
 	public void paint(Graphics g) {
-		// draw the font (menu options)
-		handleFonts(g);
+		switch (state) {
+		case MAIN_MENU:
+			// draw the font (menu options)
+			handleFonts(g);
 
-		// g.drawImage(imgMainMenu, 0, 0, null);
-
+			// g.drawImage(imgMainMenu, 0, 0, null);
+			break;
+		case BATTLESHIP:
+//			battleshipMainMenu.paint(g);
+			break;
+		case TICTACTOE:
+			ttt.paint(g);
+			break;
+		case RESET: 
+			
+			break;
+		}
 	}
 
 	private void handleFonts(Graphics g) {
@@ -91,29 +101,55 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 
 	public void run() {		
 		switch (state) {
-		case MAINMENU:
+		case MAIN_MENU:
 			
 			break;
 		case BATTLESHIP:
-			battleshipMainMenu.run();
+//			battleshipMainMenu.run();
 			break;
 		case TICTACTOE:
-			tttMainMenu.run();
+			if (ttt.isRunning()) {
+				ttt.run();
+			}
 			break;
 		case RESET: 
+			
 			break;
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// check if we have clicked an option
-		if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
-			state = GameState.TICTACTOE;
-		} 
-		else if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
-			state = GameState.BATTLESHIP;
-		}
+		switch (state) {
+		case MAIN_MENU:
+			// check if we have clicked an option
+			if (hover[0]) {
+				if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
+					state = GameState.TICTACTOE;
+				} 
+				else if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
+					state = GameState.BATTLESHIP;
+				}
+			}
+			else {
+				if ((e.getX() > 250 && e.getX() < 450) && (e.getY() > 150 && e.getY() < 300)) {
+					state = GameState.TICTACTOE;
+				} 
+				else if((e.getX() > 250 && e.getX() < 450) && (e.getY() > 250 && e.getY() < 400)) {
+					state = GameState.BATTLESHIP;
+				}
+			}
+			break;
+		case BATTLESHIP:
+			
+			break;
+		case TICTACTOE:
+			
+			break;
+		case RESET: 
+			
+			break;
+		}	
 	}
 	
 	@Override
@@ -123,20 +159,33 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// handle selection
-		if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
-			hover[0] = true;
-		} 
-		else {
-			hover[0] = false;
-		}
+		switch (state) {
+		case MAIN_MENU:
+			// handle selection
+			if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
+				hover[0] = true;
+			} 
+			else {
+				hover[0] = false;
+			}
+				
+			if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
+				hover[1] = true;
+			} 
+			else {
+				hover[1] = false;
+			}
+			break;
+		case BATTLESHIP:
 			
-		if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
-			hover[1] = true;
-		} 
-		else {
-			hover[1] = false;
-		}
+			break;
+		case TICTACTOE:
+			
+			break;
+		case RESET: 
+			
+			break;
+		}	
 	}
 
 	public static GameState getGameState() {
