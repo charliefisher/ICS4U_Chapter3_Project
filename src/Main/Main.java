@@ -18,7 +18,7 @@ public class Main {
 		GamePanel panel = new GamePanel();
 		
 //		BufferedImage jFrameIcon = new BufferedImage(null, null, false, null);
-		Cursor jFrameCursor = new Cursor(1);
+		Cursor jFrameCursor = new Cursor(0);
 		
 		// configure JFrame
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
@@ -27,12 +27,12 @@ public class Main {
 		window.setLocationRelativeTo(null);
 //		window.setIconImage(jFrameIcon);
 		window.setCursor(jFrameCursor);
-		
-		panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	
 		window.setContentPane(panel);
 		
 		panel.addMouseListener(panel);
 		panel.addMouseMotionListener(panel);
+		
 		panel.requestFocus();
 		
 		window.setVisible(true);
@@ -45,6 +45,10 @@ public class Main {
 			if (GamePanel.getGameState() == GamePanel.GameState.TICTACTOE) {
 				window.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
 				panel.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
+			}
+			else {
+				window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+				panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 			}
 			
 			

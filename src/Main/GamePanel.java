@@ -15,41 +15,41 @@ import javax.swing.JPanel;
 
 import tictactoe.TicTacToePanel;
 
-public class GamePanel extends JPanel implements MouseMotionListener, MouseListener {
+public final class GamePanel extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
-	
-	TicTacToePanel ttt = new TicTacToePanel();
-//	battleship.MainMenu battleshipMainMenu = new battleship.MainMenu();
-	
+
+	TicTacToePanel ttt;
+	// BattleshipPanel battleship;
+
 	public static enum GameState {
 		MAIN_MENU, BATTLESHIP, TICTACTOE, RESET
 	}
 
-	public static GameState state;
-	BufferedImage imgMainMenu;
-	Font[] titleFont = new Font[2];
-	boolean hover[] = { false, false };
+	private static GameState state;
+	private BufferedImage imgMainMenu;
+	private static Font tttFont, battleshipFont;
+	private boolean hover[] = { false, false };
 
 	public GamePanel() throws IOException, FontFormatException {
-		// MAKE IT A SINGLETON
-
 		// we are in the main menu
 		state = GameState.MAIN_MENU;
 
 		// URL fileURL =
-		// getClass().getResource("General_Resources/MainMenu.png");
+		// getClass().getResource("/general_resources/MainMenu.png");
 		// imgMainMenu = ImageIO.read(fileURL);
 
-		// load our custom font
-		InputStream is = getClass().getResourceAsStream("/General_Resources/print_clearly_tt.ttf");
-		Font tempFont = Font.createFont(Font.TRUETYPE_FONT, is);
+		// load tictactoe font
+		InputStream is = getClass().getResourceAsStream("/general_resources/tictactoe_font.ttf");
+		tttFont = Font.createFont(Font.TRUETYPE_FONT, is);
 
-		// create two fonts
-		titleFont[0] = tempFont.deriveFont(72f);
-		titleFont[1] = tempFont.deriveFont(108f);
+		// load battleship font
+		is = getClass().getResourceAsStream("/general_resources/tictactoe_font.ttf");
+		battleshipFont = Font.createFont(Font.TRUETYPE_FONT, is);
 
-		// imgMainMenu = ImageIO.read(new File("MainMenu.png"));
+		ttt = new TicTacToePanel();
+		// battleship = new battleship.BattleshipPanel();
+
 	}
 
 	public void paint(Graphics g) {
@@ -61,13 +61,13 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 			// g.drawImage(imgMainMenu, 0, 0, null);
 			break;
 		case BATTLESHIP:
-//			battleshipMainMenu.paint(g);
+			// battleship.paint(g);
 			break;
 		case TICTACTOE:
 			ttt.paint(g);
 			break;
-		case RESET: 
-			
+		case RESET:
+
 			break;
 		}
 	}
@@ -75,45 +75,50 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	private void handleFonts(Graphics g) {
 		// set font color
 		g.setColor(Color.BLACK);
+		int x, y;
 
 		// select font size
 		if (hover[0]) {
-			g.setFont(titleFont[1]);
-		}
-		else {
-			g.setFont(titleFont[0]);
+			g.setFont(tttFont.deriveFont(108f));
+			x = 225;
+			y = 188;
+		} else {
+			g.setFont(tttFont.deriveFont(72f));
+			x = 275;
+			y = 175;
 		}
 
 		// draw the tic tac toe
-		g.drawString("TicTacToe", 300, 200);
+		g.drawString("TicTacToe", x, y);
 
 		// select font size
 		if (hover[1]) {
-			g.setFont(titleFont[1]);
-		}
-		else {
-			g.setFont(titleFont[0]);
+			g.setFont(battleshipFont.deriveFont(108f));
+			x = 225;
+			y = 388;
+		} else {
+			g.setFont(battleshipFont.deriveFont(72f));
+			x = 275;
+			y = 375;
 		}
 
 		// draw battleship
-		g.drawString("Battleship", 300, 400);
+		g.drawString("Battleship", x, y);
 	}
 
-	public void run() {		
+	public void run() {
 		switch (state) {
 		case MAIN_MENU:
-			
+
 			break;
 		case BATTLESHIP:
-//			battleshipMainMenu.run();
+			// battleship.run();
 			break;
 		case TICTACTOE:
-			if (ttt.isRunning()) {
-				ttt.run();
-			}
+			ttt.run();
 			break;
-		case RESET: 
-			
+		case RESET:
+
 			break;
 		}
 	}
@@ -124,37 +129,40 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		case MAIN_MENU:
 			// check if we have clicked an option
 			if (hover[0]) {
-				if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
-					state = GameState.TICTACTOE;
-				} 
-				else if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
-					state = GameState.BATTLESHIP;
-				}
-			}
-			else {
-				if ((e.getX() > 250 && e.getX() < 450) && (e.getY() > 150 && e.getY() < 300)) {
-					state = GameState.TICTACTOE;
-				} 
-				else if((e.getX() > 250 && e.getX() < 450) && (e.getY() > 250 && e.getY() < 400)) {
-					state = GameState.BATTLESHIP;
-				}
+				state = GameState.TICTACTOE;
+			} 
+			else if (hover[1]) {
+				state = GameState.BATTLESHIP;
 			}
 			break;
 		case BATTLESHIP:
-			
+
 			break;
 		case TICTACTOE:
-			
+			ttt.mouseClicked(e);
 			break;
-		case RESET: 
-			
+		case RESET:
+
 			break;
-		}	
+		}
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		mouseClicked(e);
+		switch (state) {
+		case MAIN_MENU:
+			mouseClicked(e);
+			break;
+		case BATTLESHIP:
+
+			break;
+		case TICTACTOE:
+			ttt.mouseDragged(e);
+			break;
+		case RESET:
+
+			break;
+		}
 	}
 
 	@Override
@@ -162,34 +170,60 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		switch (state) {
 		case MAIN_MENU:
 			// handle selection
-			if ((e.getX() > 300 && e.getX() < 400) && (e.getY() > 200 && e.getY() < 275)) {
-				hover[0] = true;
-			} 
-			else {
-				hover[0] = false;
+			if (hover[0]) {
+				if ((e.getX() > 225 && e.getX() < 585) && (e.getY() > 115 && e.getY() < 185)) {
+					hover[0] = true;
+				} else {
+					hover[0] = false;
+				}
+			} else {
+				if ((e.getX() > 275 && e.getX() < 525) && (e.getY() > 130 && e.getY() < 175)) {
+					hover[0] = true;
+				} else {
+					hover[0] = false;
+				}
 			}
-				
-			if((e.getX() > 300 && e.getX() < 400) && (e.getY() > 300 && e.getY() < 375)) {
-				hover[1] = true;
-			} 
-			else {
-				hover[1] = false;
+
+			if (hover[1]) {
+				if ((e.getX() > 225 && e.getX() < 585) && (e.getY() > 315 && e.getY() < 385)) {
+					hover[1] = true;
+				} else {
+					hover[1] = false;
+				}
+			} else {
+				if ((e.getX() > 275 && e.getX() < 525) && (e.getY() > 330 && e.getY() < 375)) {
+					hover[1] = true;
+				} else {
+					hover[1] = false;
+				}
 			}
 			break;
 		case BATTLESHIP:
-			
+
 			break;
 		case TICTACTOE:
-			
+			ttt.mouseMoved(e);
 			break;
-		case RESET: 
-			
+		case RESET:
+
 			break;
-		}	
+		}
 	}
 
 	public static GameState getGameState() {
 		return GamePanel.state;
+	}
+	
+	public static void setGameState(GameState newState) {
+		GamePanel.state = newState;
+	}
+
+	public static Font getTTTFont() {
+		return tttFont;
+	}
+
+	public static Font getBattleshipFont() {
+		return battleshipFont;
 	}
 
 	// unused methods
@@ -197,14 +231,17 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	public void mousePressed(MouseEvent e) {
 
 	}
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
+
 	@Override
 	public void mouseEntered(MouseEvent e) {
 
 	}
+
 	@Override
 	public void mouseExited(MouseEvent e) {
 
