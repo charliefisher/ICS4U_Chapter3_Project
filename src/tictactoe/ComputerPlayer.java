@@ -1,10 +1,13 @@
 package tictactoe;
 
+import java.awt.event.MouseEvent;
+
 public class ComputerPlayer extends HumanPlayer {
 	
 	private byte x, y, move = 1;
 	private boolean centre;
 	private byte[] hpMoves = new byte[5];
+	boolean vertical = false;
 
 	public static enum GameState {
 		EASY, EXPERT
@@ -34,7 +37,7 @@ public class ComputerPlayer extends HumanPlayer {
 
 			break;
 		case EXPERT:
-			generateCordinate();
+			makeMove();
 			this.move++;
 			break;
 		}
@@ -46,7 +49,7 @@ public class ComputerPlayer extends HumanPlayer {
 		y = (byte) (Math.random() * 3);
 	}
 
-	private void generateCordinate() {
+	private void makeMove() {
 		byte[][] board = Game.getBoard();
 		byte playerSquare = 0;
 
@@ -87,93 +90,146 @@ public class ComputerPlayer extends HumanPlayer {
 			}
 			break;
 		case 2:
-			if (!aboutToWin()) {
-			}
+			// if they are not about to win
+			if (!aboutToWin((byte) 1)) {
+				// checks for open vertical centre line
+				if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
+					Game.setPosition((byte) 1, (byte) 0, this.player);
+					vertical = true;
+				}
+				// checks for open horizontal centre line
+				else if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
+					Game.setPosition((byte) 0, (byte) 1, this.player);
+					vertical = false;
+				}
+			}		
 			break;
 		case 3:
+			// if we are not about to win
+			if (!aboutToWin(this.player)) {
+				// if they are not about to win
+				if (!aboutToWin((byte)1)) {
+					// check for diagonal
+					if (!Game.checkPosition((byte) 0, (byte) 2, (byte) 1) && Game.isOpen((byte) 2, (byte) 0)) {
+						Game.setPosition((byte) 2, (byte) 0, this.player);
+					}
+					if (vertical) {
+						// check horizontal
+						if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
+							Game.setPosition((byte) 0, (byte) 1, this.player);
+						}
+					}
+					else {
+						// check vertical
+						if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
+							Game.setPosition((byte) 1, (byte) 0, this.player);
+						}
+					}	
+				}
+			}
 			break;
-		case 4: 
-			break;	
+		case 4:
+			// since the four move is irrelevant if neither play can we, revert to randomly generating coordinants
+			if (!aboutToWin(this.player)) {
+				if (!aboutToWin((byte) 1)) {
+					this.state = GameState.EASY;
+					this.run();
+				}
+			}	
 		}
 	}
+		
 	
-	private boolean aboutToWin() {
+	private boolean aboutToWin(byte player) {
 		// horizontal wins 
-		for (int i = 0; i < 3; i++) {
-			if (findCord((byte) (1 + i * 3)) && findCord((byte) (2 + i * 3))){
-				if (Game.isOpen((byte)3, (byte)i)) {
-					Game.setPosition((byte)3, (byte)i, this.player);
+		for (byte i = 0; i < 3; i++) {
+			if (Game.checkPosition((byte)0, i, player) && Game.checkPosition((byte)1, i, player)) {
+				if (Game.isOpen((byte)2, (byte)i)) {
+					Game.setPosition((byte)2, (byte)i, this.player);
 					return true;
 				}
 			}
-			else if (findCord((byte) (2 + i * 3)) && findCord((byte) (3 + i * 3))){
-				if (Game.isOpen((byte)0, (byte)0)) {
+			else if (Game.checkPosition((byte)0, i, player) && Game.checkPosition((byte)2, i, player)) {
+				if (Game.isOpen((byte)1, (byte)i)) {
 					Game.setPosition((byte)1, (byte)i, this.player);
 					return true;
 				}
 			}
-			else if (findCord((byte) (1 + i * 3)) && findCord((byte) (3 + i * 3))){
-				if (Game.isOpen((byte)i, (byte)1)) {
-					Game.setPosition((byte)2, (byte)i, this.player);
+			else if (Game.checkPosition((byte)1, i, player) && Game.checkPosition((byte)2, i, player)) {
+				if (Game.isOpen((byte)0, (byte)i)) {
+					Game.setPosition((byte)0, (byte)i, this.player);
 					return true;
 				}
 			}
 		}
 		
 		// vertical wins 
-		for (int i = 0; i < 3; i++) {
-			if (findCord((byte) (1 + i * 1)) && findCord((byte) (4 + i * 1))){
-				if (Game.isOpen((byte)2, (byte)0)) {
-					Game.setPosition((byte)2, (byte)0, this.player);
+		for (byte i = 0; i < 3; i++) {
+			if (Game.checkPosition(i, (byte)0, player) && Game.checkPosition(i, (byte)1, player)) {
+				if (Game.isOpen(i, (byte)2)) {
+					Game.setPosition(i, (byte)2, this.player);
 					return true;
 				}
 			}
-			else if (findCord((byte) (4 + i * 1)) && findCord((byte) (7 + i * 1))){
-				if (Game.isOpen((byte)0, (byte)0)) {
-					Game.setPosition((byte)0, (byte)0, this.player);
+			else if (Game.checkPosition(i, (byte)0, player) && Game.checkPosition(i, (byte)2, player)) {
+				if (Game.isOpen(i, (byte)1)) {
+					Game.setPosition(i, (byte)1, this.player);
 					return true;
 				}
 			}
-			else if (findCord((byte) (1 + i * 1)) && findCord((byte) (7 + i * 1))){
-				if (Game.isOpen((byte)1, (byte)0)) {
-					Game.setPosition((byte)1, (byte)0, this.player);
+			else if (Game.checkPosition(i, (byte)1, player) && Game.checkPosition(i, (byte)2, player)) {
+				if (Game.isOpen(i, (byte)0)) {
+					Game.setPosition(i, (byte)0, this.player);
+					return true;
+				}
+			}
+		}
+		
+		
+		
+		// diagonal wins
+		for (byte i = 0; i < 2; i++) {
+			if (Game.checkPosition((byte) (2 * i), (byte)0, player) && Game.checkPosition((byte)1, (byte)1, player)) {
+				if (Game.isOpen((byte) (2 - 2 * i), (byte)2)) {
+					Game.setPosition((byte) (2 - 2 * i), (byte)2, this.player);
+					return true;
+				}
+			}
+			else if (Game.checkPosition((byte)(2 * i), (byte)0, player) && Game.checkPosition((byte) (2 - 2 * i), (byte)2, player)) {
+				if (Game.isOpen((byte)1, (byte)1)) {
+					Game.setPosition((byte)1, (byte)1, this.player);
+					return true;
+				}
+			}
+			else if (Game.checkPosition((byte)1, (byte)1, player) && Game.checkPosition((byte) (2 - 2 * i), (byte)2, player)) {
+				if (Game.isOpen((byte) (2 * i), (byte)0)) {
+					Game.setPosition((byte) (2 * i), (byte)0, this.player);
 					return true;
 				}
 			}
 		}	
 		
-		// diagonal wins
-		for (int i = 0; i < 2; i++) {
-			if (findCord((byte) (2 * i)) && findCord((byte) 5)){
-				if (Game.isOpen((byte) (2 - 2 * i), (byte)2)) {
-					Game.setPosition((byte) (2 - 2 * i), (byte)2, this.player);
-				}
-			}
-			
-			else if (findCord((byte) 5) && findCord((byte) (9 - 2 * 1))){
-				if (Game.isOpen((byte) (2 * i), (byte)0)) {
-					Game.setPosition((byte) (2 * i), (byte) 0, this.player);
-				}
-			}
-				
-			else if (findCord((byte) (2 * i)) && findCord((byte) (9 - 2 * i))){
-				if (Game.isOpen((byte) (1), (byte)1)) {
-					Game.setPosition((byte) 1, (byte)1, this.player);
-				}
-			}
-		}		
-		
 		return false;
 	}
 	
-	private boolean findCord(byte check) {
-		for (int i = 0; i < hpMoves.length; i++) {
-			if (hpMoves[i] == check) {
-				return true;
-			}
+	
+	public void reset() {
+		for (byte i = 0; i < hpMoves.length; i++) {
+			hpMoves[i] = 0;
 		}
 		
-		return false;
+		move = 1;
+		vertical = false;
 	}
 	
+	// do not want the computer to have clicking capability
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
+	}
 }

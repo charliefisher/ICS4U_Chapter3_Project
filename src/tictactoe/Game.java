@@ -48,8 +48,8 @@ public final class Game implements Grid {
 		imgO = ImageIO.read(fileURL);
 	}
 
-	public static void setPosition(byte i, byte j, byte player) {
-		board[i][j] = player;
+	public static void setPosition(byte x, byte y, byte player) {
+		board[x][y] = player;
 		turn++;
 	}
 
@@ -186,5 +186,13 @@ public final class Game implements Grid {
 
 	public static byte[][] getBoard() {
 		return Game.board;
+	}
+	
+	public static boolean checkPosition(byte x, byte y, byte player) {
+		if (board[x][y] == player) {
+			return true;
+		}
+		
+		return false;
 	}
 }

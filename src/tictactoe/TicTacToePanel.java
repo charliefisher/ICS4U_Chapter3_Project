@@ -10,7 +10,7 @@ import main.GamePanel;
 
 public final class TicTacToePanel extends general.Panel {
 
-	long timeOver, stopBoardDisplay;
+	private static long timeOver = 0, stopBoardDisplay = 0;
 	HumanPlayer hp1, hp2;
 	ComputerPlayer cp;
 	
@@ -160,7 +160,7 @@ public final class TicTacToePanel extends general.Panel {
 	}
 
 	@Override
-	public void run() {
+	public void run() {		
 		if (state == GameState.ONE_PLAYER || state == GameState.TWO_PLAYER) {
 			Game.turn();
 			if (Game.getWinner() != 0) {
@@ -211,6 +211,9 @@ public final class TicTacToePanel extends general.Panel {
 			}
 			break;
 		case GAME_OVER:
+			Game.reset();
+			cp.reset();
+			
 			if (hoverGameOver[0]) {
 				if (lastGame == LastGameType.ONE_PLAYER) {
 					state = GameState.ONE_PLAYER;
@@ -226,7 +229,6 @@ public final class TicTacToePanel extends general.Panel {
 			
 			else if (hoverGameOver[2]) {
 				state = GameState.MAIN_MENU;
-				Game.reset();
 				GamePanel.setGameState(GamePanel.GameState.MAIN_MENU);
 			}
 			break;
