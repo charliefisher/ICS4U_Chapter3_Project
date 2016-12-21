@@ -90,41 +90,69 @@ public class ComputerPlayer extends HumanPlayer {
 			}
 			break;
 		case 2:
-			// if they are not about to win
-			if (!aboutToWin((byte) 1)) {
-				// checks for open vertical centre line
-				if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
-					Game.setPosition((byte) 1, (byte) 0, this.player);
-					vertical = true;
+			if (centre) {
+				// if they are not about to win
+				if (!aboutToWin((byte) 1)) {
+					// checks for open vertical centre line
+					if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
+						Game.setPosition((byte) 1, (byte) 0, this.player);
+						vertical = true;
+					}
+					// checks for open horizontal centre line
+					else if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
+						Game.setPosition((byte) 0, (byte) 1, this.player);
+						vertical = false;
+					}
+				}		
+			}
+			else {
+				// checks top horizontal column
+				if (!Game.checkPosition((byte) 1, (byte) 0, (byte) 1) && Game.isOpen((byte) 2, (byte) 0)) {
+					Game.setPosition((byte) 2, (byte) 0, this.player);
 				}
-				// checks for open horizontal centre line
-				else if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
-					Game.setPosition((byte) 0, (byte) 1, this.player);
-					vertical = false;
+				// checks left vertical column
+				else if (!Game.checkPosition((byte) 0, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 2)) {
+					Game.setPosition((byte) 0, (byte) 2, this.player);
 				}
-			}		
+			}
 			break;
 		case 3:
 			// if we are not about to win
 			if (!aboutToWin(this.player)) {
 				// if they are not about to win
 				if (!aboutToWin((byte)1)) {
-					// check for diagonal
-					if (!Game.checkPosition((byte) 0, (byte) 2, (byte) 1) && Game.isOpen((byte) 2, (byte) 0)) {
-						Game.setPosition((byte) 2, (byte) 0, this.player);
-					}
-					if (vertical) {
-						// check horizontal
-						if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
-							Game.setPosition((byte) 0, (byte) 1, this.player);
+					if (centre) {
+						// checks top horizontal column
+						if (!Game.checkPosition((byte) 1, (byte) 0, (byte) 1) && Game.isOpen((byte) 2, (byte) 0)) {
+							Game.setPosition((byte) 2, (byte) 0, this.player);
 						}
+						// checks left vertical column
+						else if (!Game.checkPosition((byte) 0, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 2)) {
+							Game.setPosition((byte) 0, (byte) 2, this.player);
+						}
+						// if neither are open player in the bottom right corner
+						else if (Game.isOpen((byte) 2, (byte) 2)) {
+							Game.setPosition((byte) 2, (byte) 2, this.player);
+						}							
 					}
 					else {
-						// check vertical
-						if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
-							Game.setPosition((byte) 1, (byte) 0, this.player);
+						// check for diagonal
+						if (!Game.checkPosition((byte) 0, (byte) 2, (byte) 1) && Game.isOpen((byte) 2, (byte) 0)) {
+							Game.setPosition((byte) 2, (byte) 0, this.player);
 						}
-					}	
+						if (vertical) {
+							// check horizontal
+							if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
+								Game.setPosition((byte) 0, (byte) 1, this.player);
+							}
+						}
+						else {
+							// check vertical
+							if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
+								Game.setPosition((byte) 1, (byte) 0, this.player);
+							}
+						}
+					}
 				}
 			}
 			break;
@@ -220,6 +248,8 @@ public class ComputerPlayer extends HumanPlayer {
 		
 		move = 1;
 		vertical = false;
+		
+		state = GameState.EXPERT;
 	}
 	
 	// do not want the computer to have clicking capability
