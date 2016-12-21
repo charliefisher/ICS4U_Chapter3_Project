@@ -10,7 +10,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import tictactoe.TicTacToePanel;
@@ -27,7 +29,9 @@ public final class GamePanel extends JPanel implements MouseListener, MouseMotio
 	}
 
 	private static GameState state;
-	private BufferedImage imgMainMenu;
+//	private BufferedImage imgMainMenu;
+
+	public static BufferedImage imgBoard;
 	private static Font tttFont, battleshipFont;
 	private boolean hover[] = { false, false };
 
@@ -38,6 +42,11 @@ public final class GamePanel extends JPanel implements MouseListener, MouseMotio
 		// URL fileURL =
 		// getClass().getResource("/general_resources/MainMenu.png");
 		// imgMainMenu = ImageIO.read(fileURL);
+		
+		URL fileURL;
+		
+		fileURL = getClass().getResource("/tictactoe/images/Board.png");
+		imgBoard = ImageIO.read(fileURL);
 
 		// load tictactoe font
 		InputStream is = getClass().getResourceAsStream("/general_resources/tictactoe_font.ttf");
@@ -208,8 +217,9 @@ public final class GamePanel extends JPanel implements MouseListener, MouseMotio
 
 			break;
 		}
-	}
-
+	}	
+	
+	
 	public static GameState getGameState() {
 		return GamePanel.state;
 	}

@@ -29,6 +29,7 @@ public final class TicTacToePanel extends general.Panel {
 
 	public TicTacToePanel() throws FontFormatException, IOException {	
 		state = GameState.MAIN_MENU;
+		Game.load();
 
 		hp1 = new HumanPlayer((byte) 1);
 		hp2 = new HumanPlayer((byte) 2);

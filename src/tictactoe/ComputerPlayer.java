@@ -160,7 +160,7 @@ public class ComputerPlayer extends HumanPlayer {
 			// since the four move is irrelevant if neither play can we, revert to randomly generating coordinants
 			if (!aboutToWin(this.player)) {
 				if (!aboutToWin((byte) 1)) {
-					this.state = GameState.EASY;
+					ComputerPlayer.state = GameState.EASY;
 					this.run();
 				}
 			}	

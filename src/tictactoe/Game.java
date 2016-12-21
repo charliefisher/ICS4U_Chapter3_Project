@@ -29,23 +29,28 @@ public final class Game implements Grid {
 	// 1 - player one (X)
 	// 2 - player two (O)
 	private static byte turn = 1;
+	
+	
 	private static Font gamePiece;
-
 	private static BufferedImage imgBoard, imgX, imgO;
 
-	public Game() throws IOException, FontFormatException {
+	public Game() {
+	}
+	
+	public static void load() throws IOException, FontFormatException {		
+		URL fileURL;
+		
+		fileURL = Game.class.getResource("/tictactoe/images/Board.png");
+		Game.imgBoard = ImageIO.read(fileURL);
 
-		InputStream is = getClass().getResourceAsStream("/general_resources/print_dashed_ot.otf");
-		gamePiece = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(160f);
+		fileURL = Game.class.getResource("/tictactoe/images/X.png");
+		Game.imgX = ImageIO.read(fileURL);
 
-		URL fileURL = getClass().getResource("/tictactoe.images/Board.png");
-		imgBoard = ImageIO.read(fileURL);
-
-		fileURL = getClass().getResource("/tictactoe.images/X.png");
-		imgX = ImageIO.read(fileURL);
-
-		fileURL = getClass().getResource("/tictactoe.images/O.png");
-		imgO = ImageIO.read(fileURL);
+		fileURL = Game.class.getResource("/tictactoe/images/O.png");
+		Game.imgO = ImageIO.read(fileURL);		
+		
+		InputStream is = Game.class.getResourceAsStream("/general_resources/print_dashed_tt.ttf");
+		Game.gamePiece = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(160f);
 	}
 
 	public static void setPosition(byte x, byte y, byte player) {
@@ -56,7 +61,7 @@ public final class Game implements Grid {
 	public static void drawBoard(Graphics g) {
 
 		if (TicTacToePanel.getGameState() == TicTacToePanel.GameState.TWO_PLAYER) {
-			printTurn(g);
+			Game.printTurn(g);
 		}
 
 		g.drawImage(imgBoard, 0, 0, null);
@@ -66,15 +71,11 @@ public final class Game implements Grid {
 			for (byte column = 0; column < 3; column++) {
 				if (board[row][column] == 1) {
 					g.setColor(Color.BLUE);
-
-					 g.drawString("X", row * 200 + 55, column * 200 + 150);
-
+//					 g.drawString("X", row * 200 + 55, column * 200 + 150);
 					g.drawImage(imgX, row * 200, column * 200, null);
 				} else if (board[row][column] == 2) {
 					g.setColor(Color.RED);
-
-					g.drawString("O", row * 200 + 55, column * 200 + 150);
-
+//					g.drawString("O", row * 200 + 55, column * 200 + 150);
 					g.drawImage(imgO, row * 200, column * 200, null);
 				}
 			}
@@ -189,7 +190,7 @@ public final class Game implements Grid {
 	}
 	
 	public static boolean checkPosition(byte x, byte y, byte player) {
-		if (board[x][y] == player) {
+		if (Game.board[x][y] == player) {
 			return true;
 		}
 		
