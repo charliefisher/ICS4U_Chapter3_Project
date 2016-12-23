@@ -11,7 +11,7 @@ public class Main {
 	
 	static JFrame window = new JFrame("Charlie and Aaron's Video Game Arcade");
 	
-	private static short WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;	
+	private static short WINDOW_WIDTH = 600, WINDOW_HEIGHT = 600;	
 	
 	public static void main(String[] args) throws IOException, InterruptedException, FontFormatException {
 		
@@ -41,16 +41,7 @@ public class Main {
 		
 		
 		
-		while (true) {
-			if (GamePanel.getGameState() == GamePanel.GameState.TICTACTOE) {
-				window.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
-				panel.setSize(WINDOW_HEIGHT, WINDOW_HEIGHT);
-			}
-			else {
-				window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-				panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-			}
-			
+		while (true) {			
 			
 			long timeBeforeRun = System.currentTimeMillis();
 				

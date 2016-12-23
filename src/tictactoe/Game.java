@@ -1,12 +1,10 @@
 package tictactoe;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -15,6 +13,12 @@ import general.Grid;
 import main.GamePanel;
 
 public final class Game implements Grid {
+	/*
+	 * Important to Note:
+	 * I originally started by drawing strings them decided to change it to images
+	 * I have left the working string code uncommented out as I thought it may be valuable in the future
+	 */
+	
 	// 0 - empty
 	// 1 - player one (X)
 	// 2 - player two (O)
@@ -30,8 +34,10 @@ public final class Game implements Grid {
 	// 2 - player two (O)
 	private static byte turn = 1;
 	
-	
-	private static Font gamePiece;
+	/*	  CREATE FONT FOR STRING GAME PIECE METHOD
+	 * 
+	 * private static Font gamePiece;
+	 */
 	private static BufferedImage imgBoard, imgX, imgO;
 
 	public Game() {
@@ -49,8 +55,11 @@ public final class Game implements Grid {
 		fileURL = Game.class.getResource("/tictactoe/images/O.png");
 		Game.imgO = ImageIO.read(fileURL);		
 		
-		InputStream is = Game.class.getResourceAsStream("/general_resources/print_dashed_tt.ttf");
-		Game.gamePiece = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(160f);
+		/*	  LOAD FONT FOR STRING GAME PIECES
+		 * 
+		 * InputStream is = Game.class.getResourceAsStream("/general_resources/print_dashed_tt.ttf");
+		 * Game.gamePiece = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(160f);
+		 */
 	}
 
 	public static void setPosition(byte x, byte y, byte player) {
@@ -58,6 +67,7 @@ public final class Game implements Grid {
 		turn++;
 	}
 
+	
 	public static void drawBoard(Graphics g) {
 
 		if (TicTacToePanel.getGameState() == TicTacToePanel.GameState.TWO_PLAYER) {
@@ -70,13 +80,21 @@ public final class Game implements Grid {
 		for (byte row = 0; row < 3; row++) {
 			for (byte column = 0; column < 3; column++) {
 				if (board[row][column] == 1) {
-					g.setColor(Color.BLUE);
-//					 g.drawString("X", row * 200 + 55, column * 200 + 150);
 					g.drawImage(imgX, row * 200, column * 200, null);
+					
+					/*	  ALTERNATE METHOD USING STRINGS	
+					 * 
+					 * g.setColor(Color.BLUE);
+					 * g.drawString("X", row * 200 + 55, column * 200 + 150);
+					 */	
 				} else if (board[row][column] == 2) {
-					g.setColor(Color.RED);
-//					g.drawString("O", row * 200 + 55, column * 200 + 150);
 					g.drawImage(imgO, row * 200, column * 200, null);
+
+					/*	  ALTERNATE METHOD USING STRINGS
+					 * 				
+					 * g.setColor(Color.RED);
+					 * g.drawString("O", row * 200 + 55, column * 200 + 150);
+					 */
 				}
 			}
 		}

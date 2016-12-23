@@ -1,4 +1,4 @@
-package tictactoe;
+package stones;
 
 import java.awt.Color;
 import java.awt.FontFormatException;
@@ -8,11 +8,11 @@ import java.io.IOException;
 
 import main.GamePanel;
 
-public final class TicTacToePanel extends general.Panel {
+public final class StonesPanel extends general.Panel {
 
 	private static long timeOver = 0, stopBoardDisplay = 0;
-	HumanPlayer hp1, hp2;
-	ComputerPlayer cp;
+	HumanPlayer p1;
+	Player p2;
 	
 	public static enum LastGameType {
 		ONE_PLAYER, TWO_PLAYER
@@ -27,14 +27,15 @@ public final class TicTacToePanel extends general.Panel {
 	private boolean hoverOnePlayer[] = {false, false};
 	private boolean hoverGameOver[] = {false, false, false};
 
-	public TicTacToePanel() throws FontFormatException, IOException {	
+	public StonesPanel() throws FontFormatException, IOException {	
 		state = GameState.MAIN_MENU;
 		Game.load();
-
-		hp1 = new HumanPlayer((byte) 1);
-		hp2 = new HumanPlayer((byte) 2);
-		cp = new ComputerPlayer();
+		
+		p1 = new HumanPlayer();
+//		hp2 = new HumanPlayer();
+//		cp = new ComputerPlayer();
 	}
+	
 
 	@Override
 	public void paint(Graphics g) {
@@ -50,7 +51,7 @@ public final class TicTacToePanel extends general.Panel {
 			Game.drawBoard(g);
 			break;
 		case GAME_OVER:
-			g.setFont(GamePanel.getTTTFont().deriveFont(72f));
+			g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 			g.setColor(Color.BLACK);
 			
 			// show the board for 1/4 second
@@ -61,16 +62,11 @@ public final class TicTacToePanel extends general.Panel {
 			
 			// state the results
 			else if (System.currentTimeMillis() - stopBoardDisplay < 2000) {
-				switch (Game.getWinner()) {
-				case 1:
-					g.drawString("Player 1 (Xs) Wins!", 75, 300);
-					break;
-				case 2:
-					g.drawString("Player 2 (Os) Wins!", 75, 300);
-					break;
-				case 3:
-					g.drawString("Draw", 250, 300);
-					break;
+				if(Game.getWinner() == 1) {
+					g.drawString("Player 1 Wins!", 75, 300);
+				}
+				else if (Game.getWinner() == 2) {
+					g.drawString("Player 2 Wins!", 75, 300);
 				}
 			}
 			// what to do next?
@@ -90,11 +86,11 @@ public final class TicTacToePanel extends general.Panel {
 
 			// select font size
 			if (hoverMainMenu[0]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 169;
 				y = 188;
 			} else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(72f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 				x = 206;
 				y = 175;
 			}
@@ -104,11 +100,11 @@ public final class TicTacToePanel extends general.Panel {
 
 			// select font size
 			if (hoverMainMenu[1]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 150;
 				y = 388;
 			} else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(72f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 				x = 190;
 				y = 375;
 			}
@@ -119,11 +115,11 @@ public final class TicTacToePanel extends general.Panel {
 		case CPU_SELECT:
 			// select font size
 			if (hoverOnePlayer[0]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 210;
 				y = 188;
 			} else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(72f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 				x = 235;
 				y = 175;
 			}
@@ -133,11 +129,11 @@ public final class TicTacToePanel extends general.Panel {
 
 			// select font size
 			if (hoverOnePlayer[1]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 190;
 				y = 388;
 			} else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(72f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 				x = 215;
 				y = 375;
 			}
@@ -148,12 +144,12 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		case GAME_OVER:			
 			if (hoverGameOver[0]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 145;
 				y = 160;
 			} 
 			else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(50f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(50f));
 				x = 180;
 				y = 155;
 			}
@@ -161,12 +157,12 @@ public final class TicTacToePanel extends general.Panel {
 			g.drawString("Another Game", x, y);
 			
 			if (hoverGameOver[1]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 20;
 				y = 295;
 			} 
 			else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(50f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(50f));
 				x = 80;
 				y = 290;
 			}
@@ -174,12 +170,12 @@ public final class TicTacToePanel extends general.Panel {
 			g.drawString("Select Number of Players", x, y);
 			
 			if (hoverGameOver[2]) {
-				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 180;
 				y = 440;
 			} 
 			else {
-				g.setFont(GamePanel.getTTTFont().deriveFont(50f));
+				g.setFont(GamePanel.getStonesFont().deriveFont(50f));
 				x = 205;
 				y = 435;
 			}
@@ -194,9 +190,9 @@ public final class TicTacToePanel extends general.Panel {
 	}
 
 	@Override
-	public void run() {		
+	public void run() {			
 		if (state == GameState.ONE_PLAYER || state == GameState.TWO_PLAYER) {
-			Game.turn();
+//			Game.turn();
 			if (Game.getWinner() != 0) {
 				timeOver = System.currentTimeMillis();
 				state = GameState.GAME_OVER;	
@@ -208,7 +204,7 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		case ONE_PLAYER:
 			if (Game.getTurn() == 2) {
-				cp.run();
+//				cp.run();
 			}
 			break;
 		case TWO_PLAYER:
@@ -221,6 +217,7 @@ public final class TicTacToePanel extends general.Panel {
 		}
 	}
 
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		switch (state) {
@@ -229,9 +226,11 @@ public final class TicTacToePanel extends general.Panel {
 			if (hoverMainMenu[0]) {
 				state = GameState.CPU_SELECT;
 				lastGame = GameState.ONE_PLAYER;
+//				p2 = new ComputerPlayer();
 			} else if (hoverMainMenu[1]) {
 				state = GameState.TWO_PLAYER;
 				lastGame = GameState.TWO_PLAYER;
+				p2 = new HumanPlayer();
 			}
 			break;
 		case CPU_SELECT:
@@ -247,19 +246,19 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		case ONE_PLAYER:
 			if (Game.getTurn() == 1) {
-				hp1.mouseClicked(e);
+				p1.mouseClicked(e);
 			}
 			break;
 		case TWO_PLAYER:
 			if (Game.getTurn() == 1) {
-				hp1.mouseClicked(e);
+				p1.mouseClicked(e);
 			} else {
-				hp2.mouseClicked(e);
+			((HumanPlayer) p2).mouseClicked(e);
 			}
 			break;
 		case GAME_OVER:
 			Game.reset();
-			cp.reset();
+//			cp.reset();
 			
 			if (hoverGameOver[0]) {
 				if (lastGame == GameState.ONE_PLAYER) {
@@ -424,12 +423,8 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		}
 	}
-
-	public static GameState getGameState() {
-		return TicTacToePanel.state;
-	}
 	
-	public static void setGameState(GameState newState) {
-		TicTacToePanel.state = newState;
+	public static GameState getGameState() {
+		return StonesPanel.state;
 	}
 }

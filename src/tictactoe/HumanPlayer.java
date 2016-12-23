@@ -2,14 +2,10 @@ package tictactoe;
 
 import java.awt.event.MouseEvent;
 
-public class HumanPlayer implements general.Mouse {
-
-	// 1 - X
-	// 2 - O
-	protected byte player;
+public class HumanPlayer extends Player implements general.Mouse {
 
 	public HumanPlayer(byte player) {
-		this.player = player;
+		super(player);
 	}
 
 	@Override

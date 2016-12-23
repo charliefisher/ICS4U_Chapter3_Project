@@ -1,8 +1,6 @@
 package tictactoe;
 
-import java.awt.event.MouseEvent;
-
-public class ComputerPlayer extends HumanPlayer {
+public class ComputerPlayer extends Player {
 	
 	private byte x, y, move = 1;
 	private boolean centre;
@@ -13,19 +11,13 @@ public class ComputerPlayer extends HumanPlayer {
 		EASY, EXPERT
 	}
 
-	private static GameState state;
+	private static GameState state, lastCPU;
 
-	public ComputerPlayer(boolean easy) {
+	public ComputerPlayer() {
 		super((byte) 2);
-
-		if (easy) {
-			ComputerPlayer.state = GameState.EASY;
-		} else {
-			ComputerPlayer.state = GameState.EXPERT;
-		}
 	}
 
-	public void run() {
+	public void run() {		
 		switch (state) {
 		case EASY:
 			do {
@@ -41,7 +33,6 @@ public class ComputerPlayer extends HumanPlayer {
 			this.move++;
 			break;
 		}
-
 	}
 	
 	private void generateCordinates() {
@@ -249,17 +240,14 @@ public class ComputerPlayer extends HumanPlayer {
 		move = 1;
 		vertical = false;
 		
-		state = GameState.EXPERT;
+		state = lastCPU;
 	}
 	
-	// do not want the computer to have clicking capability
-	@Override
-	public void mouseClicked(MouseEvent e) {
+	public static void setGameState(GameState newState) {
+		ComputerPlayer.state = newState;
 	}
-	@Override
-	public void mouseDragged(MouseEvent e) {
-	}
-	@Override
-	public void mouseMoved(MouseEvent e) {
+	
+	public static void setLastCPU(GameState newState) {
+		ComputerPlayer.lastCPU = newState;
 	}
 }
