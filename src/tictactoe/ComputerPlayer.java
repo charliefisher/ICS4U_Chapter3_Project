@@ -7,17 +7,20 @@ public class ComputerPlayer extends Player {
 	private byte[] hpMoves = new byte[5];
 	boolean vertical = false;
 
+	// create the states of the AI
 	public static enum GameState {
 		EASY, EXPERT
 	}
-
+	
+	
 	private static GameState state, lastCPU;
 
 	public ComputerPlayer() {
 		super((byte) 2);
 	}
 
-	public void run() {		
+	public void run() {	
+		// if it is easy, use random coordinates (no strategy)
 		switch (state) {
 		case EASY:
 			do {
@@ -29,22 +32,26 @@ public class ComputerPlayer extends Player {
 
 			break;
 		case EXPERT:
+			// if it is expert (break it down by move to determine the best option)
 			makeMove();
 			this.move++;
 			break;
 		}
 	}
 	
+	// random x and y cordnates for easy
 	private void generateCordinates() {
 		x = (byte) (Math.random() * 3);
 		y = (byte) (Math.random() * 3);
 	}
 
+
 	private void makeMove() {
+		// get the board
 		byte[][] board = Game.getBoard();
 		byte playerSquare = 0;
 
-		// check for an empty position
+		// get the square where the hp made their first move and put that into a 1D array
 		for (byte row = 0; row < 3; row++) {
 			for (byte column = 0; column < 3; column++) {
 				if (board[row][column] == 1) {
@@ -61,6 +68,7 @@ public class ComputerPlayer extends Player {
 		}
 		
 		switch (this.move) {
+		// chose the center if it is available, if not chose top left
 		case 1:
 			switch(hpMoves[0]) {
 			case 1:
@@ -84,12 +92,12 @@ public class ComputerPlayer extends Player {
 			if (centre) {
 				// if they are not about to win
 				if (!aboutToWin((byte) 1)) {
-					// checks for open vertical centre line
+					// checks for open vertical center line
 					if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
 						Game.setPosition((byte) 1, (byte) 0, this.player);
 						vertical = true;
 					}
-					// checks for open horizontal centre line
+					// checks for open horizontal center line
 					else if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
 						Game.setPosition((byte) 0, (byte) 1, this.player);
 						vertical = false;
@@ -132,13 +140,13 @@ public class ComputerPlayer extends Player {
 							Game.setPosition((byte) 2, (byte) 0, this.player);
 						}
 						if (vertical) {
-							// check horizontal
+							// check horizontal center
 							if (!Game.checkPosition((byte) 2, (byte) 1, (byte) 1) && Game.isOpen((byte) 0, (byte) 1)) {
 								Game.setPosition((byte) 0, (byte) 1, this.player);
 							}
 						}
 						else {
-							// check vertical
+							// check vertical center
 							if (!Game.checkPosition((byte) 1, (byte) 2, (byte) 1) && Game.isOpen((byte) 1, (byte) 0)) {
 								Game.setPosition((byte) 1, (byte) 0, this.player);
 							}
@@ -205,7 +213,6 @@ public class ComputerPlayer extends Player {
 		}
 		
 		
-		
 		// diagonal wins
 		for (byte i = 0; i < 2; i++) {
 			if (Game.checkPosition((byte) (2 * i), (byte)0, player) && Game.checkPosition((byte)1, (byte)1, player)) {
@@ -231,7 +238,7 @@ public class ComputerPlayer extends Player {
 		return false;
 	}
 	
-	
+	// reset all instance variables
 	public void reset() {
 		for (byte i = 0; i < hpMoves.length; i++) {
 			hpMoves[i] = 0;
@@ -243,10 +250,12 @@ public class ComputerPlayer extends Player {
 		state = lastCPU;
 	}
 	
+	// mutator game state (done through the input, not passed into the constructor)
 	public static void setGameState(GameState newState) {
 		ComputerPlayer.state = newState;
 	}
 	
+	// mutator last game state 
 	public static void setLastCPU(GameState newState) {
 		ComputerPlayer.lastCPU = newState;
 	}

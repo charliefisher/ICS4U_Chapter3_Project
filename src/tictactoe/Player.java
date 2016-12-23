@@ -5,6 +5,7 @@ public class Player {
 	// 2 - O
 	protected byte player;
 
+	// initialize the player number
 	public Player(byte player) {
 		this.player = player;
 	}

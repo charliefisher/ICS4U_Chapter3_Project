@@ -11,24 +11,32 @@ import main.GamePanel;
 public final class TicTacToePanel extends general.Panel {
 
 	private static long timeOver = 0, stopBoardDisplay = 0;
+	
+	// declare player objects
 	HumanPlayer p1;
 	Player p2;
 	
+	// declare enum for last game
 	public static enum LastGameType {
 		ONE_PLAYER, TWO_PLAYER
 	}
 
+	// declare enum for game states
 	public static enum GameState {
 		MAIN_MENU, CPU_SELECT, ONE_PLAYER, TWO_PLAYER, GAME_OVER
 	}
 
+	// set the menu options select (like main menu)
 	private static GameState state,lastGame;
 	private boolean hoverMainMenu[] = { false, false};
 	private boolean hoverOnePlayer[] = {false, false};
 	private boolean hoverGameOver[] = {false, false, false};
 
 	public TicTacToePanel() throws FontFormatException, IOException {	
+		// set state
 		state = GameState.MAIN_MENU;
+		
+		// load game images
 		Game.load();
 
 		p1 = new HumanPlayer((byte) 1);
@@ -38,16 +46,20 @@ public final class TicTacToePanel extends general.Panel {
 	public void paint(Graphics g) {
 		switch (state) {
 		case MAIN_MENU:
+			// draw menu options
 			this.handleFonts(g);
 			break;
 		case CPU_SELECT:
+			// draw sub menu options
 			this.handleFonts(g);
 			break;
 		case ONE_PLAYER:
 		case TWO_PLAYER:
+			// draw the game board
 			Game.drawBoard(g);
 			break;
 		case GAME_OVER:
+			// set font options
 			g.setFont(GamePanel.getTTTFont().deriveFont(72f));
 			g.setColor(Color.BLACK);
 			
@@ -73,6 +85,7 @@ public final class TicTacToePanel extends general.Panel {
 			}
 			// what to do next?
 			else {
+				// reset menu
 				Game.reset();
 				this.handleFonts(g);
 			}
@@ -80,13 +93,20 @@ public final class TicTacToePanel extends general.Panel {
 	}
 
 	private void handleFonts(Graphics g) {
+		// set font options
 		g.setColor(Color.BLACK);
 		
+		
+		// For both menu options:
+		// check if user is hovering over the font
+		// from this flip a boolean indicating whether the using is hovering
+		// if so, enlarge the font
+		// if it is enlarged, change our values and see if we are still hovering over it
 		switch(state) {
 		case MAIN_MENU:
 			int x, y;
 
-			// select font size
+			// 1 player
 			if (hoverMainMenu[0]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
 				x = 169;
@@ -100,7 +120,7 @@ public final class TicTacToePanel extends general.Panel {
 			// draw 1 Player
 			g.drawString("1 Player", x, y);
 
-			// select font size
+			// 2 players
 			if (hoverMainMenu[1]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
 				x = 150;
@@ -115,7 +135,7 @@ public final class TicTacToePanel extends general.Panel {
 			g.drawString("2 Players", x, y);
 			break;
 		case CPU_SELECT:
-			// select font size
+			// easy
 			if (hoverOnePlayer[0]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
 				x = 210;
@@ -126,10 +146,10 @@ public final class TicTacToePanel extends general.Panel {
 				y = 175;
 			}
 
-			// draw 1 Player
+			// easy
 			g.drawString("Easy", x, y);
 
-			// select font size
+			// expert
 			if (hoverOnePlayer[1]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(108f));
 				x = 190;
@@ -140,11 +160,12 @@ public final class TicTacToePanel extends general.Panel {
 				y = 375;
 			}
 
-			// draw 2 Players
+			// expert
 			g.drawString("Expert", x, y);
 			
 			break;
-		case GAME_OVER:			
+		case GAME_OVER:		
+			// another game
 			if (hoverGameOver[0]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
 				x = 145;
@@ -158,6 +179,7 @@ public final class TicTacToePanel extends general.Panel {
 
 			g.drawString("Another Game", x, y);
 			
+			// number of players
 			if (hoverGameOver[1]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
 				x = 20;
@@ -171,6 +193,7 @@ public final class TicTacToePanel extends general.Panel {
 			
 			g.drawString("Select Number of Players", x, y);
 			
+			// main menu
 			if (hoverGameOver[2]) {
 				g.setFont(GamePanel.getTTTFont().deriveFont(65f));
 				x = 180;
@@ -192,7 +215,8 @@ public final class TicTacToePanel extends general.Panel {
 	}
 
 	@Override
-	public void run() {		
+	public void run() {	
+		// set time when game is over
 		if (state == GameState.ONE_PLAYER || state == GameState.TWO_PLAYER) {
 			Game.turn();
 			if (Game.getWinner() != 0) {
@@ -205,6 +229,7 @@ public final class TicTacToePanel extends general.Panel {
 		case MAIN_MENU:
 			break;
 		case ONE_PLAYER:
+			// run the computer player code
 			if (Game.getTurn() == 2) {
 				((ComputerPlayer) p2).run();
 			}
@@ -224,41 +249,51 @@ public final class TicTacToePanel extends general.Panel {
 		switch (state) {
 		case MAIN_MENU:
 			// check if we have clicked an option
+			// one player
 			if (hoverMainMenu[0]) {
 				state = GameState.CPU_SELECT;
 				lastGame = GameState.ONE_PLAYER;
 				p2 = new ComputerPlayer();
-			} else if (hoverMainMenu[1]) {
+			} 
+			// two playes
+			else if (hoverMainMenu[1]) {
 				state = GameState.TWO_PLAYER;
 				lastGame = GameState.TWO_PLAYER;
 				p2 = new HumanPlayer((byte) 2);
 			}
 			break;
 		case CPU_SELECT:
+			// easy
 			if (hoverOnePlayer[0]) {
 				tictactoe.ComputerPlayer.setGameState(tictactoe.ComputerPlayer.GameState.EASY);
 				tictactoe.ComputerPlayer.setLastCPU(tictactoe.ComputerPlayer.GameState.EASY);
 				state = GameState.ONE_PLAYER;
-			} else if (hoverOnePlayer[1]) {
+			} 
+			// expert
+			else if (hoverOnePlayer[1]) {
 				tictactoe.ComputerPlayer.setGameState(tictactoe.ComputerPlayer.GameState.EXPERT);
 				tictactoe.ComputerPlayer.setLastCPU(tictactoe.ComputerPlayer.GameState.EXPERT);
 				state = GameState.ONE_PLAYER;
 			}
 			break;
 		case ONE_PLAYER:
+			// human player click
 			if (Game.getTurn() == 1) {
 				p1.mouseClicked(e);
 			}
 			break;
 		case TWO_PLAYER:
+			// call mouse click
 			if (Game.getTurn() == 1) {
 				p1.mouseClicked(e);
-			} else {
+			} 
+			else {
 				((HumanPlayer) p2).mouseClicked(e);
 			}
 			break;
 		case GAME_OVER:
 			Game.reset();
+			// reset game modes
 
 			if (hoverGameOver[0]) {
 				if (lastGame == GameState.ONE_PLAYER) {
@@ -284,6 +319,7 @@ public final class TicTacToePanel extends general.Panel {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		// drag is same as click
 		switch (state) {
 		case MAIN_MENU:
 			mouseClicked(e);
@@ -305,7 +341,7 @@ public final class TicTacToePanel extends general.Panel {
 	public void mouseMoved(MouseEvent e) {
 		switch (state) {
 		case MAIN_MENU:
-			// handle selection
+			// one player
 			if (hoverMainMenu[0]) {
 				if ((e.getX() > 175 && e.getX() < 460) && (e.getY() > 120 && e.getY() < 185)) {
 					hoverMainMenu[0] = true;
@@ -321,6 +357,7 @@ public final class TicTacToePanel extends general.Panel {
 				}
 			}
 
+			// two players
 			if (hoverMainMenu[1]) {
 				if ((e.getX() > 150 && e.getX() < 475) && (e.getY() > 320 && e.getY() < 385)) {
 					hoverMainMenu[1] = true;
@@ -337,7 +374,7 @@ public final class TicTacToePanel extends general.Panel {
 			}			
 			break;
 		case CPU_SELECT:			
-			// handle selection
+			// easy
 			if (hoverOnePlayer[0]) {
 				if ((e.getX() > 215 && e.getX() < 375) && (e.getY() > 120 && e.getY() < 185)) {
 					hoverOnePlayer[0] = true;
@@ -355,6 +392,7 @@ public final class TicTacToePanel extends general.Panel {
 				}
 			}
 			
+			// expert
 			if (hoverOnePlayer[1]) {
 				if ((e.getX() > 190 && e.getX() < 410) && (e.getY() < 400 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
@@ -373,6 +411,7 @@ public final class TicTacToePanel extends general.Panel {
 			}
 			break;
 		case GAME_OVER:
+			// another game
 			if (hoverGameOver[0]) {
 				if ((e.getX() > 145 && e.getX() < 455) && (e.getY() > 110 && e.getY() < 160)) {
 					hoverGameOver[0] = true;
@@ -389,6 +428,7 @@ public final class TicTacToePanel extends general.Panel {
 				}
 			}
 			
+			// number players
 			if (hoverGameOver[1]) {
 				if ((e.getX() > 20 && e.getX() < 580) && (e.getY() > 250 && e.getY() < 300)) {
 					hoverGameOver[1] = true;
@@ -404,7 +444,7 @@ public final class TicTacToePanel extends general.Panel {
 				}	
 			}
 			
-			
+			// main menu
 			if (hoverGameOver[2]) {
 				if ((e.getX() > 180 && e.getX() < 420) && (e.getY() > 375 && e.getY() < 325)) {
 					hoverGameOver[2] = true;
@@ -425,10 +465,12 @@ public final class TicTacToePanel extends general.Panel {
 		}
 	}
 
+	// state accessor
 	public static GameState getGameState() {
 		return TicTacToePanel.state;
 	}
 	
+	// state mutator
 	public static void setGameState(GameState newState) {
 		TicTacToePanel.state = newState;
 	}

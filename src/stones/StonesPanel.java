@@ -10,27 +10,36 @@ import main.GamePanel;
 
 public final class StonesPanel extends general.Panel {
 
+	// initialize time storing variables for resetting
 	private static long timeOver = 0, stopBoardDisplay = 0;
+	
+	// declare player objects
 	HumanPlayer p1;
 	Player p2;
 	
+	// declare last state enum
 	public static enum LastGameType {
 		ONE_PLAYER, TWO_PLAYER
 	}
 
+	// declare stae enum
 	public static enum GameState {
 		MAIN_MENU, CPU_SELECT, ONE_PLAYER, TWO_PLAYER, GAME_OVER
 	}
 
+	// initialize the enums and hovering booleans (same use as the main menu)
 	private static GameState state,lastGame;
 	private boolean hoverMainMenu[] = { false, false};
 	private boolean hoverOnePlayer[] = {false, false};
 	private boolean hoverGameOver[] = {false, false, false};
 
 	public StonesPanel() throws FontFormatException, IOException {	
+		// initialize the state (Main Menu)
 		state = GameState.MAIN_MENU;
+		// load game images
 		Game.load();
 		
+		// initialize the first player to human
 		p1 = new HumanPlayer();
 	}
 	
@@ -39,16 +48,20 @@ public final class StonesPanel extends general.Panel {
 	public void paint(Graphics g) {
 		switch (state) {
 		case MAIN_MENU:
+			// draw our menu options
 			this.handleFonts(g);
 			break;
 		case CPU_SELECT:
+			// a secondary menu - draw those options
 			this.handleFonts(g);
 			break;
+			// draw the game board
 		case ONE_PLAYER:
 		case TWO_PLAYER:
 			Game.drawBoard(g);
 			break;
 		case GAME_OVER:
+			// set the font options
 			g.setFont(GamePanel.getStonesFont().deriveFont(72f));
 			g.setColor(Color.BLACK);
 			
@@ -69,6 +82,7 @@ public final class StonesPanel extends general.Panel {
 			}
 			// what to do next?
 			else {
+				// the reset menu
 				Game.reset();
 				this.handleFonts(g);
 			}
@@ -76,13 +90,15 @@ public final class StonesPanel extends general.Panel {
 	}
 
 	private void handleFonts(Graphics g) {
+		// set font options
 		g.setColor(Color.BLACK);
 		
 		switch(state) {
+		// set each coordinate for the menu option depending on whether or not it is enlarged
 		case MAIN_MENU:
 			int x, y;
 
-			// select font size
+			// 1 Player
 			if (hoverMainMenu[0]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 169;
@@ -96,7 +112,7 @@ public final class StonesPanel extends general.Panel {
 			// draw 1 Player
 			g.drawString("1 Player", x, y);
 
-			// select font size
+			// 2 Players
 			if (hoverMainMenu[1]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 150;
@@ -110,8 +126,9 @@ public final class StonesPanel extends general.Panel {
 			// draw 2 Players
 			g.drawString("2 Players", x, y);
 			break;
+			// set each coordinate for the menu option depending on whether or not it is enlarged
 		case CPU_SELECT:
-			// select font size
+			// Easy
 			if (hoverOnePlayer[0]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 210;
@@ -122,10 +139,10 @@ public final class StonesPanel extends general.Panel {
 				y = 175;
 			}
 
-			// draw 1 Player
+			// Easy
 			g.drawString("Easy", x, y);
 
-			// select font size
+			// Expert
 			if (hoverOnePlayer[1]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(108f));
 				x = 190;
@@ -136,11 +153,13 @@ public final class StonesPanel extends general.Panel {
 				y = 375;
 			}
 
-			// draw 2 Players
+			// Expert
 			g.drawString("Expert", x, y);
 			
 			break;
-		case GAME_OVER:			
+			// set each coordinate for the menu option depending on whether or not it is enlarged
+		case GAME_OVER:	
+			// Another Game
 			if (hoverGameOver[0]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 145;
@@ -152,8 +171,10 @@ public final class StonesPanel extends general.Panel {
 				y = 155;
 			}
 
+			
 			g.drawString("Another Game", x, y);
 			
+			// Select number of players
 			if (hoverGameOver[1]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 20;
@@ -167,6 +188,7 @@ public final class StonesPanel extends general.Panel {
 			
 			g.drawString("Select Number of Players", x, y);
 			
+			// main menu
 			if (hoverGameOver[2]) {
 				g.setFont(GamePanel.getStonesFont().deriveFont(65f));
 				x = 180;
@@ -188,30 +210,14 @@ public final class StonesPanel extends general.Panel {
 	}
 
 	@Override
-	public void run() {			
+	public void run() {
+		// set the time when a winner is declared 
+		// we want to draw the screen for a bit before going to the next menu
 		if (state == GameState.ONE_PLAYER || state == GameState.TWO_PLAYER) {
-//			Game.turn();
 			if (Game.getWinner() != 0) {
 				timeOver = System.currentTimeMillis();
 				state = GameState.GAME_OVER;	
 			}
-		}
-		
-		switch (state) {
-		case MAIN_MENU:
-			break;
-		case ONE_PLAYER:
-			if (Game.getTurn() == 2) {
-//				cp.run();
-			}
-			break;
-		case TWO_PLAYER:
-			break;	
-		case GAME_OVER:
-			break;
-		default:
-			break;
-		
 		}
 	}
 
@@ -219,45 +225,58 @@ public final class StonesPanel extends general.Panel {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		switch (state) {
+		// check if we have clicked on a menu option
 		case MAIN_MENU:
-			// check if we have clicked an option
+			// one player
 			if (hoverMainMenu[0]) {
 				state = GameState.CPU_SELECT;
 				lastGame = GameState.ONE_PLAYER;
+				// there is no implementation code for a computer player, but this is how to declare it
 //				p2 = new ComputerPlayer();
-			} else if (hoverMainMenu[1]) {
+			} 
+			// two players
+			else if (hoverMainMenu[1]) {
 				state = GameState.TWO_PLAYER;
 				lastGame = GameState.TWO_PLAYER;
 				p2 = new HumanPlayer();
 			}
 			break;
+			// go to secondary menu
 		case CPU_SELECT:
+			// easy
 			if (hoverOnePlayer[0]) {
 				tictactoe.ComputerPlayer.setGameState(tictactoe.ComputerPlayer.GameState.EASY);
 				tictactoe.ComputerPlayer.setLastCPU(tictactoe.ComputerPlayer.GameState.EASY);
 				state = GameState.ONE_PLAYER;
-			} else if (hoverOnePlayer[1]) {
+			} 
+			// expert
+			else if (hoverOnePlayer[1]) {
 				tictactoe.ComputerPlayer.setGameState(tictactoe.ComputerPlayer.GameState.EXPERT);
 				tictactoe.ComputerPlayer.setLastCPU(tictactoe.ComputerPlayer.GameState.EXPERT);
 				state = GameState.ONE_PLAYER;
 			}
 			break;
 		case ONE_PLAYER:
+			// if it is one player (only click for the human player)
 			if (Game.getTurn() == 1) {
 				p1.mouseClicked(e);
 			}
 			break;
+			// determine which player to click for (p1 or p2)
 		case TWO_PLAYER:
 			if (Game.getTurn() == 1) {
 				p1.mouseClicked(e);
-			} else {
+			} 
+			else {
 			((HumanPlayer) p2).mouseClicked(e);
 			}
 			break;
 		case GAME_OVER:
 			Game.reset();
+			// you would need to reset the computer here but there is no implementation
 //			cp.reset();
 			
+			// another game (reset to the last game type)
 			if (hoverGameOver[0]) {
 				if (lastGame == GameState.ONE_PLAYER) {
 					state = GameState.ONE_PLAYER;
@@ -266,11 +285,11 @@ public final class StonesPanel extends general.Panel {
 					state = GameState.TWO_PLAYER;
 				}		
 			}
-			
+			// go to the player number select
 			else if (hoverGameOver[1]) {
 				state = GameState.MAIN_MENU;
 			}
-			
+			// go to the main menu
 			else if (hoverGameOver[2]) {
 				state = GameState.MAIN_MENU;
 				GamePanel.setGameState(GamePanel.GameState.MAIN_MENU);
@@ -279,8 +298,10 @@ public final class StonesPanel extends general.Panel {
 		}
 	}
 
+	
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		// dragged is the same as clicked for our purposes here
 		switch (state) {
 		case MAIN_MENU:
 			mouseClicked(e);
@@ -301,8 +322,13 @@ public final class StonesPanel extends general.Panel {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		switch (state) {
+		// For menu options:
+		// check if user is hovering over the font
+		// from this flip a boolean indicating whether the using is hovering
+		// if so, enlarge the font
+		// if it is enlarged, change our values and see if we are still hovering over it
 		case MAIN_MENU:
-			// handle selection
+			// Player 1
 			if (hoverMainMenu[0]) {
 				if ((e.getX() > 175 && e.getX() < 460) && (e.getY() > 120 && e.getY() < 185)) {
 					hoverMainMenu[0] = true;
@@ -317,7 +343,7 @@ public final class StonesPanel extends general.Panel {
 					hoverMainMenu[0] = false;
 				}
 			}
-
+			// Player 2
 			if (hoverMainMenu[1]) {
 				if ((e.getX() > 150 && e.getX() < 475) && (e.getY() > 320 && e.getY() < 385)) {
 					hoverMainMenu[1] = true;
@@ -334,7 +360,7 @@ public final class StonesPanel extends general.Panel {
 			}			
 			break;
 		case CPU_SELECT:			
-			// handle selection
+			// Easy
 			if (hoverOnePlayer[0]) {
 				if ((e.getX() > 215 && e.getX() < 375) && (e.getY() > 120 && e.getY() < 185)) {
 					hoverOnePlayer[0] = true;
@@ -351,7 +377,7 @@ public final class StonesPanel extends general.Panel {
 					hoverOnePlayer[0] = false;
 				}
 			}
-			
+			// Expert
 			if (hoverOnePlayer[1]) {
 				if ((e.getX() > 190 && e.getX() < 410) && (e.getY() < 400 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
@@ -370,6 +396,7 @@ public final class StonesPanel extends general.Panel {
 			}
 			break;
 		case GAME_OVER:
+			// Another Game
 			if (hoverGameOver[0]) {
 				if ((e.getX() > 145 && e.getX() < 455) && (e.getY() > 110 && e.getY() < 160)) {
 					hoverGameOver[0] = true;
@@ -385,7 +412,7 @@ public final class StonesPanel extends general.Panel {
 					hoverGameOver[0] = false;
 				}
 			}
-			
+			// Player number select
 			if (hoverGameOver[1]) {
 				if ((e.getX() > 20 && e.getX() < 580) && (e.getY() > 250 && e.getY() < 300)) {
 					hoverGameOver[1] = true;
@@ -401,7 +428,7 @@ public final class StonesPanel extends general.Panel {
 				}	
 			}
 			
-			
+			// go to main menu
 			if (hoverGameOver[2]) {
 				if ((e.getX() > 180 && e.getX() < 420) && (e.getY() > 395 && e.getY() < 440)) {
 					hoverGameOver[2] = true;
@@ -422,6 +449,7 @@ public final class StonesPanel extends general.Panel {
 		}
 	}
 	
+	// state accessor
 	public static GameState getGameState() {
 		return StonesPanel.state;
 	}
