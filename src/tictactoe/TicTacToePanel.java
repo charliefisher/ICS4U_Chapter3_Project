@@ -11,8 +11,8 @@ import main.GamePanel;
 public final class TicTacToePanel extends general.Panel {
 
 	private static long timeOver = 0, stopBoardDisplay = 0;
-	HumanPlayer hp1, hp2;
-	ComputerPlayer cp;
+	HumanPlayer p1;
+	Player p2;
 	
 	public static enum LastGameType {
 		ONE_PLAYER, TWO_PLAYER
@@ -31,9 +31,7 @@ public final class TicTacToePanel extends general.Panel {
 		state = GameState.MAIN_MENU;
 		Game.load();
 
-		hp1 = new HumanPlayer((byte) 1);
-		hp2 = new HumanPlayer((byte) 2);
-		cp = new ComputerPlayer();
+		p1 = new HumanPlayer((byte) 1);
 	}
 
 	@Override
@@ -208,7 +206,7 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		case ONE_PLAYER:
 			if (Game.getTurn() == 2) {
-				cp.run();
+				((ComputerPlayer) p2).run();
 			}
 			break;
 		case TWO_PLAYER:
@@ -229,9 +227,11 @@ public final class TicTacToePanel extends general.Panel {
 			if (hoverMainMenu[0]) {
 				state = GameState.CPU_SELECT;
 				lastGame = GameState.ONE_PLAYER;
+				p2 = new ComputerPlayer();
 			} else if (hoverMainMenu[1]) {
 				state = GameState.TWO_PLAYER;
 				lastGame = GameState.TWO_PLAYER;
+				p2 = new HumanPlayer((byte) 2);
 			}
 			break;
 		case CPU_SELECT:
@@ -247,23 +247,23 @@ public final class TicTacToePanel extends general.Panel {
 			break;
 		case ONE_PLAYER:
 			if (Game.getTurn() == 1) {
-				hp1.mouseClicked(e);
+				p1.mouseClicked(e);
 			}
 			break;
 		case TWO_PLAYER:
 			if (Game.getTurn() == 1) {
-				hp1.mouseClicked(e);
+				p1.mouseClicked(e);
 			} else {
-				hp2.mouseClicked(e);
+				((HumanPlayer) p2).mouseClicked(e);
 			}
 			break;
 		case GAME_OVER:
 			Game.reset();
-			cp.reset();
-			
+
 			if (hoverGameOver[0]) {
 				if (lastGame == GameState.ONE_PLAYER) {
 					state = GameState.ONE_PLAYER;
+					((ComputerPlayer) p2).reset();
 				}
 				else {
 					state = GameState.TWO_PLAYER;
@@ -356,7 +356,7 @@ public final class TicTacToePanel extends general.Panel {
 			}
 			
 			if (hoverOnePlayer[1]) {
-				if ((e.getX() > 190 && e.getX() < 450) && (e.getY() > 400 && e.getY() < 385)) {
+				if ((e.getX() > 190 && e.getX() < 410) && (e.getY() < 400 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
 				} 
 				else {
@@ -364,7 +364,7 @@ public final class TicTacToePanel extends general.Panel {
 				}
 			} 
 			else {
-				if ((e.getX() > 215 && e.getX() < 375) && (e.getY() > 375 && e.getY() < 375)) {
+				if ((e.getX() > 215 && e.getX() < 370) && (e.getY() < 390 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
 				} 
 				else {
@@ -406,14 +406,14 @@ public final class TicTacToePanel extends general.Panel {
 			
 			
 			if (hoverGameOver[2]) {
-				if ((e.getX() > 180 && e.getX() < 420) && (e.getY() > 395 && e.getY() < 440)) {
+				if ((e.getX() > 180 && e.getX() < 420) && (e.getY() > 375 && e.getY() < 325)) {
 					hoverGameOver[2] = true;
 				} else {
 					hoverGameOver[2] = false;
 				}
 			}
 			else {
-				if ((e.getX() > 205 && e.getX() < 395) && (e.getY() > 400 && e.getY() < 435)) {
+				if ((e.getX() > 205 && e.getX() < 395) && (e.getY() > 388 && e.getY() < 340)) {
 					hoverGameOver[2] = true;
 				} else {
 					hoverGameOver[2] = false;

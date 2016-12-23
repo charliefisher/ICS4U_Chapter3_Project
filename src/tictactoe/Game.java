@@ -74,13 +74,13 @@ public final class Game implements Grid {
 			Game.printTurn(g);
 		}
 
-		g.drawImage(imgBoard, 0, 0, null);
+		g.drawImage(imgBoard, 50, 35, null);
 		g.setFont(GamePanel.getTTTFont().deriveFont(160f));
 
 		for (byte row = 0; row < 3; row++) {
 			for (byte column = 0; column < 3; column++) {
 				if (board[row][column] == 1) {
-					g.drawImage(imgX, row * 200, column * 200, null);
+					g.drawImage(imgX, row * 167 + 50, column * 167 + 35, null);
 					
 					/*	  ALTERNATE METHOD USING STRINGS	
 					 * 
@@ -88,7 +88,7 @@ public final class Game implements Grid {
 					 * g.drawString("X", row * 200 + 55, column * 200 + 150);
 					 */	
 				} else if (board[row][column] == 2) {
-					g.drawImage(imgO, row * 200, column * 200, null);
+					g.drawImage(imgO, row * 167 + 50, column * 167 + 35, null);
 
 					/*	  ALTERNATE METHOD USING STRINGS
 					 * 				

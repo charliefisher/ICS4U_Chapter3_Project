@@ -32,8 +32,6 @@ public final class StonesPanel extends general.Panel {
 		Game.load();
 		
 		p1 = new HumanPlayer();
-//		hp2 = new HumanPlayer();
-//		cp = new ComputerPlayer();
 	}
 	
 
@@ -63,10 +61,10 @@ public final class StonesPanel extends general.Panel {
 			// state the results
 			else if (System.currentTimeMillis() - stopBoardDisplay < 2000) {
 				if(Game.getWinner() == 1) {
-					g.drawString("Player 1 Wins!", 75, 300);
+					g.drawString("Player 1 Wins!", 125, 300);
 				}
 				else if (Game.getWinner() == 2) {
-					g.drawString("Player 2 Wins!", 75, 300);
+					g.drawString("Player 2 Wins!", 125, 300);
 				}
 			}
 			// what to do next?
@@ -355,7 +353,7 @@ public final class StonesPanel extends general.Panel {
 			}
 			
 			if (hoverOnePlayer[1]) {
-				if ((e.getX() > 190 && e.getX() < 450) && (e.getY() > 400 && e.getY() < 385)) {
+				if ((e.getX() > 190 && e.getX() < 410) && (e.getY() < 400 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
 				} 
 				else {
@@ -363,7 +361,7 @@ public final class StonesPanel extends general.Panel {
 				}
 			} 
 			else {
-				if ((e.getX() > 215 && e.getX() < 375) && (e.getY() > 375 && e.getY() < 375)) {
+				if ((e.getX() > 215 && e.getX() < 370) && (e.getY() < 390 && e.getY() > 325)) {
 					hoverOnePlayer[1] = true;
 				} 
 				else {
